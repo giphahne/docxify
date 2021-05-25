@@ -6,5 +6,5 @@ def docxify():
     print("hello")
 
 
-def docxify():
+def dedocxify():
     print("world")

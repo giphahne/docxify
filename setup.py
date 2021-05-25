@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='docxify',
-    version='0.0.1',
+    version='0.0.2',
     description='docxify and dedocxify files for fun and profit',
     url='https://danhahne.com/projects/docxify',
     author='Dan Hahne',
@@ -17,7 +17,6 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: System Tools',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
