@@ -1,13 +1,29 @@
 import sys
 import os
 import argparse
+from functools import partial
 
 import argcomplete
 
 from docx import Document
 import base58
 
-#def punctuate(chunk):
+
+def punctuate(chunk):
+    pass
+
+
+def unpunctuate(chunk):
+    pass
+
+
+# def yield_chapter_docs(chapter):
+#     current_chapter = chapter
+#     while True:
+
+#         document = Document()
+#         document.add_heading('Chapter 1', 0)
+#         yield
 
 
 def docxify():
@@ -25,6 +41,10 @@ def docxify():
 
     parser.add_argument("-o", "--output-directory", type=str, help="")
 
+    parser.add_argument("--paragraph-size", type=int, default=1024, help="")
+
+    parser.add_argument("--chapter-size", type=int, default=64, help="")
+
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
@@ -33,17 +53,24 @@ def docxify():
     print(f"creating directory: {args.output_directory}")
     os.mkdir(args.output_directory)
 
+    f = open(args.input_file, "rb")
+    paragraphs = (c for c in iter(lambda: f.read(args.paragraph_size), b""))
+
+    #with open(args.input_file, 'rb') as f:
+    #while current_chapter_size < args.chapter_size:
+
     document = Document()
     document.add_heading('Chapter 1', 0)
 
-    with open(args.input_file, 'rb') as f:
-        #paragraph = base58.b58encode(f.read())
+    for paragraph in paragraphs:
+        p = base58.b58encode(paragraph).decode('utf-8')
+        #    paragraph = f.read().hex()
+        print(p)
+        result = document.add_paragraph(p)
 
-        paragraph = f.read().hex()
-        print(paragraph)
-        p = document.add_paragraph(paragraph)
+        #print(sys.getsizeof(document))
 
-        document.save(os.path.join(args.output_directory, "Chapter1.docx"))
+    document.save(os.path.join(args.output_directory, "Chapter1.docx"))
 
 
 def dedocxify():
