@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='docxify',
-    version='0.0.2',
+    version='0.0.3',
     description='docxify and dedocxify files for fun and profit',
     url='https://danhahne.com/projects/docxify',
     author='Dan Hahne',
@@ -23,7 +23,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
-    install_requires=['base58', 'python-docx'],
+    install_requires=['base58', 'python-docx', 'argcomplete'],
     packages=['docxify'],
     entry_points={
         'console_scripts': [
