@@ -3,6 +3,12 @@
 Encode/decode an arbitrary/(binary) payload in `.docx` transport wrapper.
 Memory footprint is independent of payload size (`O(1)` memory size).
 
+Setup:
+```sh
+
+$ pip install docxify
+```
+
 
 Usage:
 ```sh
@@ -10,6 +16,14 @@ Usage:
 $ docxify --input-file payload.dat  --output-directory word_docs
 
 ```
+
+`--output-directory` is created at run-time; it must not exist
+prior to execution.
+
+
+----
+
+
 
 
 ## Encoding schemata

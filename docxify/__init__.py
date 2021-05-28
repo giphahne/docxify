@@ -21,8 +21,7 @@ def punctuate(chunk):
 
 
 def unpunctuate(chunk):
-    #return chunk.rstrip(".")
-    return chunk
+    return chunk.strip()
 
 
 def docxify():
@@ -42,14 +41,14 @@ def docxify():
 
     parser.add_argument("--paragraph-size",
                         type=int,
-                        default=1024,
+                        default=2048,
                         help=("Chunk-size of payload encoding, in bytes "
                               "(note that size of ~encoded~ paragraph will be "
                               "larger due to encoding overhead)"))
 
     parser.add_argument("--chapter-size",
                         type=int,
-                        default=64,
+                        default=256,
                         help=("Number of ``paragraphs'' to include "
                               "in each ``chapter''"))
 
@@ -87,7 +86,8 @@ def docxify():
             os.path.join(args.output_directory,
                          f"Chapter_{chapter_number}.docx"))
 
-    # not strictly necessary:
+    # not strictly necessary, but since file wasn't opened within a
+    # control structure it makes me feel better, lol:
     f.close()
 
 
@@ -111,3 +111,17 @@ def dedocxify():
 
     print(f"dedocxifying: {args.input_directory} into: {args.output_file}",
           file=sys.stderr)
+
+    chapters = sorted(os.listdir(args.input_directory))
+
+    def get_docx_paragraphs(D):
+        # Note that each document (aka 'chapter')
+        # begins with a header paragraph:
+        yield from zip(
+            repeat(D),
+            Document(
+                docx=os.path.join(args.input_directory, D)).paragraphs[1:])
+
+    with open(args.output_file, "wb") as f:
+        for chap, p in chain.from_iterable(map(get_docx_paragraphs, chapters)):
+            f.write(base58.b58decode(unpunctuate(p.text)))

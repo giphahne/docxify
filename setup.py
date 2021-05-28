@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='docxify',
-    version='0.0.5',
+    version='0.1.0',
     description='docxify and dedocxify files for fun and profit',
     url='https://danhahne.com/projects/docxify',
     author='Dan Hahne',
