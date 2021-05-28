@@ -1,5 +1,16 @@
 # docxify
 
+Encode/decode an arbitrary/(binary) payload in `.docx` transport wrapper.
+Memory footprint is independent of payload size (`O(1)` memory size).
+
+
+Usage:
+```sh
+
+$ docxify --input-file payload.dat  --output-directory word_docs
+
+```
+
 
 ## Encoding schemata
 

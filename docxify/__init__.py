@@ -1,7 +1,10 @@
 import sys
 import os
 import argparse
-from functools import partial
+from itertools import count
+from itertools import repeat
+from itertools import chain
+from itertools import groupby
 
 import argcomplete
 
@@ -10,20 +13,14 @@ import base58
 
 
 def punctuate(chunk):
-    pass
+    """
+    Word-length distribution in text/prose (English?)
+    """
+    return chunk
 
 
 def unpunctuate(chunk):
-    pass
-
-
-# def yield_chapter_docs(chapter):
-#     current_chapter = chapter
-#     while True:
-
-#         document = Document()
-#         document.add_heading('Chapter 1', 0)
-#         yield
+    return chunk
 
 
 def docxify():
@@ -41,36 +38,49 @@ def docxify():
 
     parser.add_argument("-o", "--output-directory", type=str, help="")
 
-    parser.add_argument("--paragraph-size", type=int, default=1024, help="")
+    parser.add_argument("--paragraph-size",
+                        type=int,
+                        default=1024,
+                        help=("Chunk-size of payload encoding, in bytes "
+                              "(note that size of ~encoded~ paragraph will be "
+                              "larger due to encoding overhead)"))
 
-    parser.add_argument("--chapter-size", type=int, default=64, help="")
+    parser.add_argument("--chapter-size",
+                        type=int,
+                        default=64,
+                        help=("Number of ``paragraphs'' to include "
+                              "in each ``chapter''"))
 
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
-    print(f"docxifying: {args.input_file} into: {args.output_directory}")
+    print(f"docxifying: {args.input_file} into: {args.output_directory}",
+          file=sys.stderr)
 
-    print(f"creating directory: {args.output_directory}")
+    print(f"creating directory: {args.output_directory}", file=sys.stderr)
     os.mkdir(args.output_directory)
 
     f = open(args.input_file, "rb")
     paragraphs = (c for c in iter(lambda: f.read(args.paragraph_size), b""))
 
-    #with open(args.input_file, 'rb') as f:
-    #while current_chapter_size < args.chapter_size:
+    for chapter_number, chapter_paragraphs in groupby(zip(
+            chain.from_iterable(
+                (repeat(c, args.chapter_size) for c in count(1))), paragraphs),
+                                                      key=lambda x: x[0]):
 
-    document = Document()
-    document.add_heading('Chapter 1', 0)
+        document = Document()
+        document.add_heading(f'Chapter {chapter_number}', 0)
 
-    for paragraph in paragraphs:
-        p = base58.b58encode(paragraph).decode('utf-8')
-        #    paragraph = f.read().hex()
-        print(p)
-        result = document.add_paragraph(p)
+        for _, paragraph in chapter_paragraphs:
+            p = punctuate(base58.b58encode(paragraph).decode('utf-8'))
 
-        #print(sys.getsizeof(document))
+            print(chapter_number, p[:30], " ... ", p[-30:])
 
-    document.save(os.path.join(args.output_directory, "Chapter1.docx"))
+            result = document.add_paragraph(p)
+
+        document.save(
+            os.path.join(args.output_directory,
+                         f"Chapter_{chapter_number}.docx"))
 
 
 def dedocxify():
