@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: docxify
+Version: 0.1.1
+Summary: Encode/decode an arbitrary/(binary) payload in `.docx` transport wrapper.
+Home-page: UNKNOWN
+Author: Dan Hahne
+Author-email: contact@danhahne.com
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
