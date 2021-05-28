@@ -9,9 +9,9 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='docxify',
-    version='0.1.1',
+    version='0.1.2',
     description='docxify and dedocxify files for fun and profit',
-    url='https://danhahne.com/projects/docxify',
+    url='https://github.com/giphahne/docxify',
     author='Dan Hahne',
     author_email='contact@danhahne.com',
     classifiers=[
