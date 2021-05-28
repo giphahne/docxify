@@ -16,10 +16,12 @@ def punctuate(chunk):
     """
     Word-length distribution in text/prose (English?)
     """
+    #return chunk + "."
     return chunk
 
 
 def unpunctuate(chunk):
+    #return chunk.rstrip(".")
     return chunk
 
 
@@ -51,6 +53,8 @@ def docxify():
                         help=("Number of ``paragraphs'' to include "
                               "in each ``chapter''"))
 
+    parser.add_argument("-v", "--verbose", action='store_true', default=False)
+
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
@@ -74,13 +78,17 @@ def docxify():
         for _, paragraph in chapter_paragraphs:
             p = punctuate(base58.b58encode(paragraph).decode('utf-8'))
 
-            print(chapter_number, p[:30], " ... ", p[-30:])
+            if args.verbose:
+                print(chapter_number, p[:30], " ... ", p[-30:])
 
             result = document.add_paragraph(p)
 
         document.save(
             os.path.join(args.output_directory,
                          f"Chapter_{chapter_number}.docx"))
+
+    # not strictly necessary:
+    f.close()
 
 
 def dedocxify():
@@ -101,4 +109,5 @@ def dedocxify():
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
-    print(f"dedocxifying: {args.input_directory} into: {args.output_file}")
+    print(f"dedocxifying: {args.input_directory} into: {args.output_file}",
+          file=sys.stderr)
