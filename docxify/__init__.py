@@ -42,15 +42,16 @@ def docxify():
     parser.add_argument("--paragraph-size",
                         type=int,
                         default=2048,
-                        help=("Chunk-size of payload encoding, in bytes "
+                        help=("Chunk-size of payload encoding, in "
+                              "bytes - default 2048. "
                               "(note that size of ~encoded~ paragraph will be "
                               "larger due to encoding overhead)"))
 
     parser.add_argument("--chapter-size",
                         type=int,
-                        default=256,
+                        default=1024,
                         help=("Number of ``paragraphs'' to include "
-                              "in each ``chapter''"))
+                              "in each ``chapter'' - default 1024"))
 
     parser.add_argument("-v", "--verbose", action='store_true', default=False)
 
@@ -112,7 +113,10 @@ def dedocxify():
     print(f"dedocxifying: {args.input_directory} into: {args.output_file}",
           file=sys.stderr)
 
-    chapters = sorted(os.listdir(args.input_directory))
+    # ``chapters'' have names of the form: ``Chapter_n.docx''
+    # for an integer ``n'' (~not~ zero-padded)
+    chapters = sorted(os.listdir(args.input_directory),
+                      key=lambda x: int(x.split("_")[1].split(".")[0]))
 
     def get_docx_paragraphs(D):
         # Note that each document (aka 'chapter')
